@@ -19,6 +19,14 @@ set -e
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Detect if running in CI/CD or non-interactive environment
+if [ -z "$TERM" ] || [ "$TERM" = "dumb" ] || [ -n "$CI" ] || [ -n "$VERCEL" ] || [ -n "$GITHUB_ACTIONS" ]; then
+    echo "⚠ Detected CI/CD or non-interactive environment"
+    echo "This script is designed to run on a mail server, not in CI/CD."
+    echo "Skipping deployment. For documentation, see README.md"
+    exit 0
+fi
+
 # Load environment variables from .env file
 if [ -f "$SCRIPT_DIR/.env" ]; then
     # Export variables from .env file

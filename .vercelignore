@@ -1,0 +1,11 @@
+# Vercel Ignore - This is a mail server deployment template
+# Not meant to be deployed on Vercel
+
+# Ignore everything except documentation
+*
+!README.md
+!QUICKSTART.md
+!docs/
+!examples/README.md
+!CONTRIBUTING.md
+!LICENSE

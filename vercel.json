@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "name": "universal-mailer-docs",
+  "builds": [
+    {
+      "src": "README.md",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/README.md"
+    }
+  ],
+  "github": {
+    "silent": true,
+    "enabled": false
+  }
+}
