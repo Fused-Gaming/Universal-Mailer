@@ -1,0 +1,378 @@
+# ============================================================================
+# Universal Mail Server Template - .gitignore
+# ============================================================================
+
+# ============================================================================
+# Environment Configuration - NEVER COMMIT THESE
+# ============================================================================
+.env
+.env.local
+.env.*.local
+*.env.backup
+
+# ============================================================================
+# Logs & Debug Files
+# ============================================================================
+*.log
+logs/
+*.log.*
+/var/log/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================================================
+# Backup Files
+# ============================================================================
+*.bak
+*~
+*.swp
+*.swo
+*.swn
+*.orig
+*.rej
+
+# ============================================================================
+# Operating System Files
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# IDE / Editor Files
+# ============================================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Eclipse
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.metadata
+bin/
+tmp/
+*.tmp
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ============================================================================
+# Node.js (for documentation tools)
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.npm
+.eslintcache
+.node_repl_history
+.yarn-integrity
+.pnp.*
+
+# ============================================================================
+# Python (for Modoboa)
+# ============================================================================
+venv/
+env/
+ENV/
+virtualenv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ============================================================================
+# Build Artifacts
+# ============================================================================
+dist/
+build/
+*.tar.gz
+*.zip
+*.rar
+*.7z
+*.iso
+*.jar
+*.war
+*.ear
+*.nar
+
+# ============================================================================
+# Generated Documentation
+# ============================================================================
+docs/pdf/
+docs/api/
+docs/_build/
+docs/.doctrees/
+site/
+.mkdocs_cache/
+
+# ============================================================================
+# Secrets & Credentials - CRITICAL: NEVER COMMIT
+# ============================================================================
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.keystore
+secrets/
+credentials/
+.secrets
+config/secrets.yml
+sensitive/
+private/
+
+# SSL/TLS Certificates
+*.csr
+*.der
+*.cer
+*.cert
+
+# SSH Keys
+id_rsa
+id_rsa.pub
+id_dsa
+id_dsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
+known_hosts
+authorized_keys
+
+# GPG Keys
+*.gpg
+*.asc
+secring.*
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# ============================================================================
+# Mail Server Specific
+# ============================================================================
+
+# Installation artifacts
+/opt/modoboa/
+/srv/modoboa/
+installer.cfg
+modoboa-installer.log
+
+# Modoboa specific
+/etc/modoboa/
+/var/lib/modoboa/
+/var/spool/modoboa/
+
+# Database dumps & backups
+*.sql
+*.dump
+*.db
+*.sqlite
+*.sqlite3
+backup-*.tar.gz
+backup-*.sql.gz
+/var/backups/mail-server/
+
+# Mail data (DO NOT COMMIT ACTUAL MAIL)
+/var/mail/
+/var/spool/mail/
+Maildir/
+
+# Postfix/Dovecot configs (generated during install)
+/etc/postfix/main.cf.backup
+/etc/dovecot/dovecot.conf.backup
+
+# DKIM keys (NEVER COMMIT PRIVATE KEYS)
+/etc/opendkim/keys/
+*.private
+mail.private
+
+# Let's Encrypt certificates
+/etc/letsencrypt/
+
+# ============================================================================
+# Test Files
+# ============================================================================
+test-*.sh
+test-*.log
+debug-*.log
+debug-*.txt
+*.test
+*.spec.sh
+
+# Test data
+test-data/
+fixtures/
+mocks/
+
+# Coverage reports
+coverage/
+htmlcov/
+*.cover
+
+# ============================================================================
+# CI/CD Artifacts
+# ============================================================================
+.gitlab-ci-local/
+.circleci/
+.travis.d/
+junit.xml
+test-results/
+
+# ============================================================================
+# Git specific
+# ============================================================================
+*.orig
+*.patch
+*.diff
+.git-rewrite/
+
+# ============================================================================
+# Archive & Compressed Files
+# ============================================================================
+*.gz
+*.bz2
+*.xz
+*.tgz
+*.tbz2
+
+# ============================================================================
+# Miscellaneous
+# ============================================================================
+.vagrant/
+Vagrantfile.local
+*.box
+
+# Docker
+.dockerignore.backup
+docker-compose.override.yml
+
+# Ansible
+*.retry
+.vault_pass
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# ============================================================================
+# Project Specific
+# ============================================================================
+
+# Deployment summary (optional - regenerate as needed)
+DEPLOYMENT_SUMMARY.md
+
+# Local configuration overrides
+.local/
+local-config/
+
+# User-specific notes
+NOTES.md
+TODO.local.md
+SCRATCH.md
+
+# ============================================================================
+# IMPORTANT REMINDERS
+# ============================================================================
+#
+# NEVER COMMIT:
+# - .env files (contain passwords and secrets)
+# - Private keys (SSL, SSH, DKIM, GPG)
+# - Database dumps with real data
+# - Actual mail content
+# - Production credentials
+# - API tokens/keys
+#
+# ALWAYS COMMIT:
+# - .env.example (template without secrets)
+# - Documentation
+# - Example configurations
+# - Public keys (if needed)
+# - Schema/structure files
+#
+# ============================================================================
