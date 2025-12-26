@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mail Server Configuration Schema",
+  "description": "Validation schema for .env configuration files",
+  "type": "object",
+  "required": [
+    "ORG_NAME",
+    "PRIMARY_DOMAIN",
+    "MAIL_DOMAIN",
+    "ADMIN_EMAIL"
+  ],
+  "properties": {
+    "ORG_NAME": {
+      "type": "string",
+      "description": "Organization name",
+      "minLength": 1,
+      "examples": ["ACME Corporation", "My Company"]
+    },
+    "ORG_TAGLINE": {
+      "type": "string",
+      "description": "Organization tagline or description"
+    },
+    "PRIMARY_DOMAIN": {
+      "type": "string",
+      "description": "Primary email domain",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]?\\.[a-z]{2,}$",
+      "examples": ["example.com", "mydomain.org"]
+    },
+    "MAIL_DOMAIN": {
+      "type": "string",
+      "description": "Mail server subdomain",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]?\\.[a-z0-9][a-z0-9-]{0,61}[a-z0-9]?\\.[a-z]{2,}$",
+      "examples": ["mail.example.com", "mx.mydomain.org"]
+    },
+    "ADMIN_EMAIL": {
+      "type": "string",
+      "description": "Administrator email address",
+      "format": "email",
+      "examples": ["admin@example.com"]
+    },
+    "BRAND_PRIMARY": {
+      "type": "string",
+      "description": "Primary brand color (hex)",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "default": "#0066FF"
+    },
+    "BRAND_SECONDARY": {
+      "type": "string",
+      "description": "Secondary brand color (hex)",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "default": "#00D4FF"
+    },
+    "BRAND_DARK": {
+      "type": "string",
+      "description": "Dark theme color (hex)",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "default": "#0A0E27"
+    },
+    "SCRIPT_VERSION": {
+      "type": "string",
+      "description": "Script version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "0.0.0"
+    },
+    "DB_ENGINE": {
+      "type": "string",
+      "description": "Database engine",
+      "enum": ["postgres", "mysql"],
+      "default": "postgres"
+    },
+    "DOVECOT_ENABLED": {
+      "type": "string",
+      "description": "Enable Dovecot IMAP/POP3",
+      "enum": ["true", "false"],
+      "default": "true"
+    },
+    "POSTFIX_ENABLED": {
+      "type": "string",
+      "description": "Enable Postfix SMTP",
+      "enum": ["true", "false"],
+      "default": "true"
+    },
+    "OPENDKIM_ENABLED": {
+      "type": "string",
+      "description": "Enable OpenDKIM",
+      "enum": ["true", "false"],
+      "default": "true"
+    },
+    "SPAMASSASSIN_ENABLED": {
+      "type": "string",
+      "description": "Enable SpamAssassin",
+      "enum": ["true", "false"],
+      "default": "true"
+    },
+    "CLAMAV_ENABLED": {
+      "type": "string",
+      "description": "Enable ClamAV antivirus",
+      "enum": ["true", "false"],
+      "default": "true"
+    },
+    "PORT_SMTP": {
+      "type": "string",
+      "description": "SMTP port",
+      "pattern": "^\\d+$",
+      "default": "25"
+    },
+    "PORT_SUBMISSION": {
+      "type": "string",
+      "description": "SMTP submission port",
+      "pattern": "^\\d+$",
+      "default": "587"
+    },
+    "PORT_IMAPS": {
+      "type": "string",
+      "description": "IMAPS port",
+      "pattern": "^\\d+$",
+      "default": "993"
+    },
+    "BACKUP_RETENTION_DAYS": {
+      "type": "string",
+      "description": "Backup retention in days",
+      "pattern": "^\\d+$",
+      "default": "7"
+    },
+    "FAIL2BAN_MAXRETRY": {
+      "type": "string",
+      "description": "Fail2ban max retry attempts",
+      "pattern": "^\\d+$",
+      "default": "5"
+    },
+    "FAIL2BAN_BANTIME": {
+      "type": "string",
+      "description": "Fail2ban ban time (seconds)",
+      "pattern": "^\\d+$",
+      "default": "3600"
+    }
+  }
+}

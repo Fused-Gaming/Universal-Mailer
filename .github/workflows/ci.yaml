@@ -1,0 +1,141 @@
+name: CI - Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    name: Lint Shell Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Lint build.sh
+        run: shellcheck build.sh
+
+      - name: Lint utility scripts
+        run: |
+          if [ -d "utils" ]; then
+            find utils -name "*.sh" -exec shellcheck {} \;
+          fi
+
+  validate-config:
+    name: Validate Configuration Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate .env.example
+        run: |
+          if [ ! -f ".env.example" ]; then
+            echo "Error: .env.example not found"
+            exit 1
+          fi
+          echo "✓ .env.example exists"
+
+      - name: Validate example templates
+        run: |
+          for file in examples/.env.*; do
+            if [ -f "$file" ]; then
+              echo "Validating $file"
+              # Check for required variables
+              grep -q "PRIMARY_DOMAIN=" "$file" || { echo "Missing PRIMARY_DOMAIN in $file"; exit 1; }
+              grep -q "MAIL_DOMAIN=" "$file" || { echo "Missing MAIL_DOMAIN in $file"; exit 1; }
+              grep -q "ORG_NAME=" "$file" || { echo "Missing ORG_NAME in $file"; exit 1; }
+              echo "✓ $file is valid"
+            fi
+          done
+
+      - name: Validate JSON files
+        run: |
+          for file in *.json; do
+            if [ -f "$file" ]; then
+              echo "Validating $file"
+              python3 -m json.tool "$file" > /dev/null || { echo "Invalid JSON in $file"; exit 1; }
+              echo "✓ $file is valid JSON"
+            fi
+          done
+
+  test-script-syntax:
+    name: Test Script Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test build.sh syntax
+        run: bash -n build.sh
+
+      - name: Check for required functions
+        run: |
+          grep -q "show_banner()" build.sh || { echo "Missing show_banner function"; exit 1; }
+          grep -q "preflight_checks()" build.sh || { echo "Missing preflight_checks function"; exit 1; }
+          grep -q "install_modoboa()" build.sh || { echo "Missing install_modoboa function"; exit 1; }
+          echo "✓ All required functions present"
+
+  documentation-check:
+    name: Check Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check required documentation files
+        run: |
+          files=("README.md" "QUICKSTART.md" "CONTRIBUTING.md" "LICENSE" "SECURITY.md" "CHANGELOG.md" "ROADMAP.md")
+          for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Error: $file not found"
+              exit 1
+            fi
+            echo "✓ $file exists"
+          done
+
+      - name: Check markdown formatting
+        uses: DavidAnson/markdownlint-action@v1
+        with:
+          files: '**/*.md'
+          ignore: 'node_modules'
+          config: |
+            {
+              "MD013": false,
+              "MD033": false,
+              "MD041": false
+            }
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for hardcoded secrets
+        run: |
+          if grep -r "password.*=" --include="*.sh" --exclude-dir=".git" | grep -v "PASSWORD.*=.*\$" | grep -v "DB_PASSWORD.*=.*\"\""; then
+            echo "Warning: Potential hardcoded passwords found"
+            exit 1
+          fi
+          echo "✓ No hardcoded secrets detected"
+
+      - name: Run Trivy security scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'

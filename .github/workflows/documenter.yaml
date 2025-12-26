@@ -1,0 +1,105 @@
+name: Documentation Generator
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - '.env.example'
+  pull_request:
+    paths:
+      - '**.md'
+      - 'docs/**'
+
+jobs:
+  generate-docs:
+    name: Generate Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm install -g markdown-pdf
+          npm install -g doctoc
+
+      - name: Generate Table of Contents
+        run: |
+          doctoc README.md --title '## Table of Contents' --github
+          doctoc QUICKSTART.md --title '## Table of Contents' --github
+          doctoc CONTRIBUTING.md --title '## Table of Contents' --github
+
+      - name: Generate PDF documentation
+        run: |
+          mkdir -p docs/pdf
+          markdown-pdf README.md -o docs/pdf/README.pdf
+          markdown-pdf QUICKSTART.md -o docs/pdf/QUICKSTART.pdf
+          markdown-pdf TEMPLATE_SYSTEM.md -o docs/pdf/TEMPLATE_SYSTEM.pdf
+
+      - name: Generate configuration reference
+        run: |
+          echo "# Configuration Reference" > docs/CONFIG_REFERENCE.md
+          echo "" >> docs/CONFIG_REFERENCE.md
+          echo "Auto-generated from .env.example" >> docs/CONFIG_REFERENCE.md
+          echo "" >> docs/CONFIG_REFERENCE.md
+          cat .env.example >> docs/CONFIG_REFERENCE.md
+
+      - name: Generate API documentation
+        run: |
+          mkdir -p docs/api
+          # Extract function documentation from build.sh
+          grep -B 3 "^[a-z_]*() {" build.sh | grep -v "^--$" > docs/api/functions.txt || true
+
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          cname: docs.mail-server-template.com  # Optional: your custom domain
+
+  validate-links:
+    name: Validate Documentation Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'yes'
+          config-file: '.github/markdown-link-check-config.json'
+          folder-path: '.'
+          file-extension: '.md'
+
+  spell-check:
+    name: Spell Check Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install aspell
+        run: sudo apt-get install -y aspell aspell-en
+
+      - name: Run spell check
+        run: |
+          for file in *.md; do
+            echo "Checking $file"
+            aspell list --lang=en --mode=markdown < "$file" | sort -u || true
+          done

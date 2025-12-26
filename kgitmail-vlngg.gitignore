@@ -1,0 +1,78 @@
+# Environment Configuration
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+/var/log/*.log
+
+# Backup files
+*.bak
+*~
+*.swp
+*.swo
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vs/
+
+# Node modules (if documentation tools used)
+node_modules/
+package-lock.json
+
+# Python virtual environments
+venv/
+env/
+ENV/
+*.pyc
+__pycache__/
+
+# Build artifacts
+dist/
+build/
+*.tar.gz
+*.zip
+
+# Generated documentation
+docs/pdf/
+docs/api/
+
+# Secrets & Credentials
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+credentials/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Installation artifacts
+/opt/modoboa/
+/srv/modoboa/
+installer.cfg
+
+# Database dumps
+*.sql
+*.dump
+
+# Modoboa specific
+/etc/modoboa/
+/var/lib/modoboa/
+
+# Test files
+test-*.sh
+debug-*.log

@@ -1,0 +1,73 @@
+name: Discord Notifications
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [opened, closed, reopened]
+  release:
+    types: [published]
+  issues:
+    types: [opened, closed]
+
+jobs:
+  notify:
+    name: Send Discord Notification
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
+    steps:
+      - name: Notify on Push
+        if: github.event_name == 'push'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "New commit pushed to ${{ github.ref_name }}"
+          description: |
+            **Commit:** ${{ github.event.head_commit.message }}
+            **Author:** ${{ github.event.head_commit.author.name }}
+            **Repository:** ${{ github.repository }}
+          color: 0x00ff00
+          url: ${{ github.event.head_commit.url }}
+
+      - name: Notify on PR Merge
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Pull Request Merged"
+          description: |
+            **PR:** ${{ github.event.pull_request.title }}
+            **Author:** ${{ github.event.pull_request.user.login }}
+            **Merged by:** ${{ github.event.pull_request.merged_by.login }}
+          color: 0x9b59b6
+          url: ${{ github.event.pull_request.html_url }}
+
+      - name: Notify on Release
+        if: github.event_name == 'release'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "New Release Published"
+          description: |
+            **Version:** ${{ github.event.release.tag_name }}
+            **Release:** ${{ github.event.release.name }}
+            **Author:** ${{ github.event.release.author.login }}
+          color: 0xf1c40f
+          url: ${{ github.event.release.html_url }}
+
+      - name: Notify on Issue
+        if: github.event_name == 'issues'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Issue ${{ github.event.action }}"
+          description: |
+            **Issue:** ${{ github.event.issue.title }}
+            **Author:** ${{ github.event.issue.user.login }}
+            **State:** ${{ github.event.issue.state }}
+          color: ${{ github.event.action == 'opened' && '0xe74c3c' || '0x2ecc71' }}
+          url: ${{ github.event.issue.html_url }}

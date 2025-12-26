@@ -1,0 +1,45 @@
+{
+  "name": "Universal Mail Server Deployment Template",
+  "version": "0.0.0",
+  "description": "Automated mail server deployment using Modoboa for any domain",
+  "documentation": {
+    "main": "README.md",
+    "quickstart": "QUICKSTART.md",
+    "api": "CLAUDE.MD",
+    "contributing": "CONTRIBUTING.md",
+    "security": "SECURITY.md",
+    "changelog": "CHANGELOG.md",
+    "roadmap": "ROADMAP.md",
+    "template_system": "TEMPLATE_SYSTEM.md"
+  },
+  "examples": {
+    "corporate": "examples/.env.corporate",
+    "startup": "examples/.env.startup",
+    "development": "examples/.env.development"
+  },
+  "configuration": {
+    "template": ".env.example",
+    "schema": "schema.json"
+  },
+  "scripts": {
+    "deployment": "build.sh",
+    "utilities": "utils/"
+  },
+  "metadata": {
+    "homepage": "https://github.com/Fused-Gaming/Universal-Mailer",
+    "repository": "https://github.com/Fused-Gaming/Universal-Mailer.git",
+    "bugs": "https://github.com/Fused-Gaming/Universal-Mailer/issues",
+    "docs_site": "https://your-org.github.io/mail-server-template/",
+    "license": "MIT"
+  },
+  "tags": [
+    "mail-server",
+    "modoboa",
+    "postfix",
+    "dovecot",
+    "deployment",
+    "automation",
+    "bash",
+    "template"
+  ]
+}
